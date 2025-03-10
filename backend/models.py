@@ -15,6 +15,16 @@ def add_transaction(transaction_type, amount, description, date=None):
     conn.commit()
     conn.close()
 
+
+def get_transaction_by_id(transaction_id):
+    conn = sqlite3.connect('finance.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM transactions WHERE id = ?', (transaction_id,))
+    transaction = cursor.fetchone()
+    conn.close()
+    return transaction
+
+
 def get_transactions():
     conn = sqlite3.connect('db/finance.db')
     cursor = conn.cursor()
@@ -22,6 +32,19 @@ def get_transactions():
     transactions = cursor.fetchall()
     conn.close()
     return transactions
+
+
+def update_transaction(transaction_type, amount, description, date, transaction_id):
+    conn = sqlite3.connect('db/finance.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        UPDATE transactions
+        SET type = ?, amount = ?, description = ?, date = ?
+        WHERE ID = 9
+    ''', (transaction_type, amount, description, date, transaction_id))
+    conn.commit()
+    conn.close()
+
 
 def delete_transaction(transaction_id):
     conn = sqlite3.connect('db/finance.db')
